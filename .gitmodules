@@ -1,0 +1,3 @@
+[submodule "KDSoap.git"]
+	path = KDSoap
+	url = git@github.com:xXRadioHeadXx/KDSoap.git

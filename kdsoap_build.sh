@@ -4,7 +4,7 @@
 
 cd ./KDSoap
 
-git submodule update --init --recursive
+#git submodule update --init --recursive
 
 cmake \
 -DCMAKE_PREFIX_PATH=/home/codeinside/Qt/6.8.2/gcc_64 \
@@ -14,7 +14,8 @@ cmake \
 -S ./ \
 -B ./build-release-static \
 -DXKB_INCLUDE_DIR:PATH=XKB_INCLUDE_DIR-NOTFOUND \
--DXKB_LIBRARY:FILEPATH=XKB_LIBRARY-NOTFOUND
+-DXKB_LIBRARY:FILEPATH=XKB_LIBRARY-NOTFOUND \
+-DCMAKE_INSTALL_PREFIX=../lib
 
 cmake \
 --build ./build-release-static \

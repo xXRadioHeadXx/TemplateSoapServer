@@ -12,7 +12,7 @@
 #define HELLOWORLD_SERVER_H
 
 #include "KDSoapServerObjectInterface.h"
-#include "wsdl_helloworld.h"
+#include "wsdl/wsdl_helloworld.h"
 
 // clazy:excludeall=ctor-missing-parent-argument
 class HelloWorldServerObject : public Hello_ServiceServerBase

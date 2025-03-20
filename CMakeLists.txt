@@ -24,20 +24,24 @@ set(KDSoap_INCLUDE_DIRS
         ./KDSoap/src/
         ./KDSoap/src/KDSoapClient/
         ./KDSoap/src/KDSoapServer/
-        ./KDSoap/testtools/
-        ./KDSoap/kdwsdl2cpp/
-        ./KDSoap/kdwsdl2cpp/src/
-        ./KDSoap/kdwsdl2cpp/libkode/code_generation/
-        ./KDSoap/kdwsdl2cpp/libkode/
-        ./KDSoap/kdwsdl2cpp/libkode/schema/
-        ./KDSoap/kdwsdl2cpp/wsdl/)
-#set(KDSoap_LIBRARY_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/lib/libkdsoap-qt6.a ${CMAKE_CURRENT_SOURCE_DIR}/lib/libkdwsdl2cpp_lib.a)
+#        ./KDSoap/testtools/
+#        ./KDSoap/kdwsdl2cpp/
+#        ./KDSoap/kdwsdl2cpp/src/
+#        ./KDSoap/kdwsdl2cpp/libkode/code_generation/
+#        ./KDSoap/kdwsdl2cpp/libkode/
+#        ./KDSoap/kdwsdl2cpp/libkode/schema/
+#        ./KDSoap/kdwsdl2cpp/wsdl/
+)
+set(KDSoap_LIBRARY_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/lib/libkdsoap-qt6.a ${CMAKE_CURRENT_SOURCE_DIR}/lib/libkdsoap-server-qt6.a ${CMAKE_CURRENT_SOURCE_DIR}/lib/libkdwsdl2cpp_lib.a)
 
 add_library(kdsoap SHARED IMPORTED)
 set_property(TARGET kdsoap PROPERTY IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/lib/libkdsoap-qt6.a)
 
-add_library(kdwsdl2cpp SHARED IMPORTED)
-set_property(TARGET kdwsdl2cpp PROPERTY IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/lib/libkdwsdl2cpp_lib.a)
+add_library(kdsoap-server SHARED IMPORTED)
+set_property(TARGET kdsoap-server PROPERTY IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/lib/libkdsoap-server-qt6.a)
+
+#add_library(kdwsdl2cpp SHARED IMPORTED)
+#set_property(TARGET kdwsdl2cpp PROPERTY IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/lib/libkdwsdl2cpp_lib.a)
 
 
 #include(${KDSoap-qt6_DIR}/KDSoap/KDSoapMacros.cmake)
@@ -51,11 +55,14 @@ include_directories( ${KDSoap_INCLUDE_DIRS} )
 find_package(
         Qt6 COMPONENTS
         Core
+        Network
         REQUIRED)
 set(TemplateSoapServerSRCS
         ./src/main.cpp
-        ./src/wsdl_helloworld.h
-        src/wsdl_helloworld.cpp
+        ./src/wsdl/wsdl_helloworld.h
+        ./src/wsdl/wsdl_helloworld.cpp
+        ./src/helloworld_serverobject.h
+        ./src/helloworld_serverobject.cpp
 )
 
 
@@ -70,8 +77,9 @@ add_executable(
 target_link_libraries(
         TemplateSoapServer
         Qt::Core
+        Qt6::Network
         kdsoap
-        kdwsdl2cpp
-#        kdsoap-server
+#        kdwsdl2cpp
+        kdsoap-server
 )
 

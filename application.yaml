@@ -1,0 +1,15 @@
+application:
+  name: pmp-ms-nsi
+
+server:
+  host: localhost
+  port: 8080
+  security:
+    protocol: ssl
+
+datasource:
+  driver: sqlite
+  url: 127.0.0.1
+  username: username
+  password: password
+

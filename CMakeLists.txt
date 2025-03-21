@@ -73,6 +73,12 @@ set(TemplateSoapServerSRCS
         ./src/wsdl/wsdl_helloworld.cpp
         ./src/helloworld_serverobject.h
         ./src/helloworld_serverobject.cpp
+        src/config/StructCfg.h
+        src/config/IConfiguration.h
+        src/config/YamlConfiguration.h
+        src/config/LocatorConfiguration.cpp
+        src/config/LocatorConfiguration.h
+        src/config/ConfigurationService.h
 )
 
 #include(${KDSoap_BINARY_DIRS}/KDSoap/KDSoapMacros.cmake)

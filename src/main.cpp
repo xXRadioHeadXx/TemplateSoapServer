@@ -7,6 +7,9 @@
 #include <iostream>
 #include <QHostAddress>
 
+#include "config/ConfigurationService.h"
+#include "config/LocatorConfiguration.h"
+
 class Server : public KDSoapServer
 {
     Q_OBJECT
@@ -22,15 +25,18 @@ public:
 int main(int argc, char **argv)
 {
     QCoreApplication app(argc, argv);
-    Server server;
-    server.setLogLevel(Server::LogEveryCall);
-    const bool listening = server.listen(QHostAddress::Any, 8081);
-    if (!listening) {
-        std::cerr << "Cannot start server: " << qPrintable(server.errorString()) << std::endl;
-        return 1;
-    } else {
-        std::cout << "Listening..." << std::endl;
-    }
+    // Server server;
+    // server.setLogLevel(Server::LogEveryCall);
+    // const bool listening = server.listen(QHostAddress::Any, 8081);
+    // if (!listening) {
+    //     std::cerr << "Cannot start server: " << qPrintable(server.errorString()) << std::endl;
+    //     return 1;
+    // } else {
+    //     std::cout << "Listening..." << std::endl;
+    // }
+
+    ConfigurationService::init("/home/codeinside/ciprojects/q5/TemplateSoapServer/application.yaml");
+    std::cout << "application.name..." << ConfigurationService::value("application.name").value() << std::endl;
     return app.exec();
 }
 #include "main.moc"

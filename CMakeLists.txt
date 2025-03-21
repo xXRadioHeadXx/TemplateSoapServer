@@ -1,62 +1,72 @@
 cmake_minimum_required(VERSION 3.29)
 project(TemplateSoapServer)
 
+set(CMAKE_CXX_STANDARD 20)
 
-set(KSWSDL2CPP_OPTION "-server")
+if (DEFINED Qt5_DIR)
+    if (NOT "${Qt5_DIR}" STREQUAL "")
+        set(Qt5_DIR "/home/codeinside/Qt/5.15.2/gcc_64/lib/cmake/Qt5")
+    endif ()
+endif ()
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-set(CMAKE_AUTOUIC ON)
+if (DEFINED Qt5)
+    if (NOT "${Qt5}" STREQUAL "")
+        set(Qt5 "/home/codeinside/Qt/5.15.2/gcc_64/lib/cmake")
+    endif ()
+endif ()
 
-#set(CMAKE_PREFIX_PATH "/home/codeinside/Qt/6.8.2/gcc_64/bin")
-set(Qt6 "/home/codeinside/Qt/6.8.2/gcc_64/lib/cmake/Qt6")
-set(Qt6_DIR "/home/codeinside/Qt/6.8.2/gcc_64/lib/cmake/Qt6")
-set(CMAKE_PREFIX_PATH "/home/codeinside/Qt/6.8.2/gcc_64")
+if (DEFINED CMAKE_PREFIX_PATH)
+    if (NOT "${CMAKE_PREFIX_PATH}" STREQUAL "")
+        set(CMAKE_PREFIX_PATH "/home/codeinside/Qt/5.15.2/gcc_64/lib/cmake")
+    endif ()
+endif ()
 
-set(KDSoap_DIR ./KDSoap)
-set(KDSoap-qt6_DIR ./KDSoap/build-release-static)
-include(${KDSoap-qt6_DIR}/KDSoap/KDSoapMacros.cmake)
-
-
-
-set(KDSoap_INCLUDE_DIRS
-        ./KDSoap/src/
-        ./KDSoap/src/KDSoapClient/
-        ./KDSoap/src/KDSoapServer/
-#        ./KDSoap/testtools/
-#        ./KDSoap/kdwsdl2cpp/
-#        ./KDSoap/kdwsdl2cpp/src/
-#        ./KDSoap/kdwsdl2cpp/libkode/code_generation/
-#        ./KDSoap/kdwsdl2cpp/libkode/
-#        ./KDSoap/kdwsdl2cpp/libkode/schema/
-#        ./KDSoap/kdwsdl2cpp/wsdl/
+include(FetchContent)
+FetchContent_Declare(figcone
+        GIT_REPOSITORY "git@github.com:xXRadioHeadXx/figcone.git"
+        GIT_TAG "origin/master"
 )
-set(KDSoap_LIBRARY_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/lib/libkdsoap-qt6.a ${CMAKE_CURRENT_SOURCE_DIR}/lib/libkdsoap-server-qt6.a ${CMAKE_CURRENT_SOURCE_DIR}/lib/libkdwsdl2cpp_lib.a)
+#uncomment if you need to install figcone with your target
+#set(INSTALL_FIGCONE ON)
+set(FIGCONE_USE_ALL OFF)
+set(FIGCONE_USE_JSON OFF)
+set(FIGCONE_USE_YAML ON)
+set(FIGCONE_USE_TOML OFF)
+set(FIGCONE_USE_XML OFF)
+set(FIGCONE_USE_INI OFF)
+set(FIGCONE_USE_SHOAL OFF)
 
-add_library(kdsoap SHARED IMPORTED)
-set_property(TARGET kdsoap PROPERTY IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/lib/libkdsoap-qt6.a)
-
-add_library(kdsoap-server SHARED IMPORTED)
-set_property(TARGET kdsoap-server PROPERTY IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/lib/libkdsoap-server-qt6.a)
-
-#add_library(kdwsdl2cpp SHARED IMPORTED)
-#set_property(TARGET kdwsdl2cpp PROPERTY IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/lib/libkdwsdl2cpp_lib.a)
-
-
-#include(${KDSoap-qt6_DIR}/KDSoap/KDSoapMacros.cmake)
-include_directories( ${KDSoap_INCLUDE_DIRS} )
-#link_directories( ${KDSoap_LIBRARY_DIRS} )
-
-#find_package(KDSoap-qt6 CONFIG REQUIRED)
+FetchContent_MakeAvailable(figcone)
 
 
+set(CMAKE_AUTOMOC ON)
+#set(CMAKE_AUTORCC ON)
+#set(CMAKE_AUTOUIC ON)
+
+set(KDSoap_DIR KDSoap)
+set(KDSoap_BINARY_DIRS ${KDSoap_DIR}/build)
+set(KDSoap_INCLUDE_DIRS
+        ${KDSoap_DIR}/src
+        ${KDSoap_DIR}/src/KDSoapClient
+        ${KDSoap_DIR}/src/KDSoapServer
+)
+
+add_library(KDSoap::kdsoap STATIC IMPORTED)
+set_property(TARGET KDSoap::kdsoap PROPERTY IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/lib/libkdsoap.a)
+
+add_library(KDSoap::kdsoap-server STATIC IMPORTED)
+set_property(TARGET KDSoap::kdsoap-server PROPERTY IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/lib/libkdsoap-server.a)
 
 find_package(
-        Qt6 COMPONENTS
+        Qt5 COMPONENTS
         Core
         Network
         REQUIRED)
+
+include_directories(
+        ${KDSoap_INCLUDE_DIRS}
+)
+
 set(TemplateSoapServerSRCS
         ./src/main.cpp
         ./src/wsdl/wsdl_helloworld.h
@@ -65,21 +75,20 @@ set(TemplateSoapServerSRCS
         ./src/helloworld_serverobject.cpp
 )
 
-
-#set(KDWSDL2CPP ./KDSoap/build-release-static/bin/kdwsdl2cpp-qt6)
-#kdsoap_generate_wsdl(TemplateSoapServerSRCS ./src/helloworld.wsdl)
+#include(${KDSoap_BINARY_DIRS}/KDSoap/KDSoapMacros.cmake)
+#kdsoap_generate_wsdl(TemplateSoapServerSRCS ./src/wsdl/helloworld.wsdl)
 
 add_executable(
-        TemplateSoapServer
+        ${PROJECT_NAME}
         ${TemplateSoapServerSRCS}
 )
 
 target_link_libraries(
-        TemplateSoapServer
-        Qt::Core
-        Qt6::Network
-        kdsoap
-#        kdwsdl2cpp
-        kdsoap-server
+        ${PROJECT_NAME}
+        Qt5::Core
+        Qt5::Network
+        KDSoap::kdsoap
+        KDSoap::kdsoap-server
+        figcone::figcone
 )
 

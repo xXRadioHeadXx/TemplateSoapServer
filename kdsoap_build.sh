@@ -1,42 +1,48 @@
-#mkdir lib
+mkdir lib
 
-#mkdir kdwsdl2cpp
+mkdir kdwsdl2cpp
 
 cd ./KDSoap
 
-#git submodule update --init --recursive
+mkdir build
+
+git submodule update --init --recursive
 
 cmake \
--DCMAKE_PREFIX_PATH=/home/codeinside/Qt/6.8.2/gcc_64 \
--DQt6_DIR=/home/codeinside/Qt/6.8.2/gcc_64/lib/cmake/Qt6 \
+-DCMAKE_PREFIX_PATH=/home/codeinside/Qt/5.15.2/gcc_64 \
+-DQt5_DIR=/home/codeinside/Qt/5.15.2/gcc_64/lib/cmake/Qt5 \
+-DKDSoap_QT6=False \
+-DKDSoap_TESTS=False \
+-DKDSoap_EXAMPLES=False \
+-DKDSoap_DOCS=False \
 -DKDSoap_STATIC=True \
 -DCMAKE_BUILD_TYPE=Release \
--S ./ \
--B ./build-release-static \
+-S . \
+-B build \
 -DXKB_INCLUDE_DIR:PATH=XKB_INCLUDE_DIR-NOTFOUND \
 -DXKB_LIBRARY:FILEPATH=XKB_LIBRARY-NOTFOUND \
 -DCMAKE_INSTALL_PREFIX=../lib
 
 cmake \
---build ./build-release-static \
+--build build \
 --target kdwsdl2cpp_lib
 
 cmake \
---build ./build-release-static \
+--build build \
 --target kdsoap
 
 cmake \
---build ./build-release-static \
+--build build \
 --target kdsoap-server
 
 cmake \
---build ./build-release-static \
+--build build \
 --target kdwsdl2cpp
 
-cp ./build-release-static/lib/libkdsoap-qt6.a ../lib/libkdsoap-qt6.a
+cp ./build/lib/libkdsoap.a ../lib/libkdsoap.a
 
-cp ./build-release-static/lib/libkdwsdl2cpp_lib.a ../lib/libkdwsdl2cpp_lib.a
+cp ./build/lib/libkdwsdl2cpp_lib.a ../lib/libkdwsdl2cpp_lib.a
 
-cp ./build-release-static/lib/libkdsoap-server-qt6.a ../lib/libkdsoap-server-qt6.a
+cp ./build/lib/libkdsoap-server.a ../lib/libkdsoap-server.a
 
-cp ./build-release-static/bin/kdwsdl2cpp-qt6 ../libkdwsdl2cpp/kdwsdl2cpp-qt6
+cp ./build/bin/kdwsdl2cpp ../kdwsdl2cpp/kdwsdl2cpp

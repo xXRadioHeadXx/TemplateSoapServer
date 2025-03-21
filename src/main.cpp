@@ -2,9 +2,10 @@
 
 #include <QCoreApplication>
 
-#include "KDSoapServer.h"
+#include <KDSoapServer.h>
 #include "helloworld_serverobject.h"
 #include <iostream>
+#include <QHostAddress>
 
 class Server : public KDSoapServer
 {

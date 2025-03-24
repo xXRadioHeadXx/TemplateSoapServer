@@ -38,6 +38,20 @@ set(FIGCONE_USE_SHOAL OFF)
 
 FetchContent_MakeAvailable(figcone)
 
+set(BOOST_INCLUDE_LIBRARIES program_options) # thread filesystem system
+set(BOOST_ENABLE_CMAKE ON)
+
+FetchContent_Declare(
+        Boost
+        URL https://github.com/boostorg/boost/releases/download/boost-1.84.0/boost-1.84.0.tar.xz
+        URL_MD5 893b5203b862eb9bbd08553e24ff146a
+        DOWNLOAD_EXTRACT_TIMESTAMP ON
+#        EXCLUDE_FROM_ALL
+)
+
+#set(BOOST_INCLUDE_LIBRARIES program_options)
+FetchContent_MakeAvailable(Boost)
+
 
 set(CMAKE_AUTOMOC ON)
 #set(CMAKE_AUTORCC ON)
@@ -96,5 +110,6 @@ target_link_libraries(
         KDSoap::kdsoap
         KDSoap::kdsoap-server
         figcone::figcone
+        Boost::program_options
 )
 

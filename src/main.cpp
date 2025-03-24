@@ -4,13 +4,11 @@
 
 #include <KDSoapServer.h>
 #include "helloworld_serverobject.h"
-#include <iostream>
 #include <QHostAddress>
 
 #include <boost/program_options.hpp>
 
 #include "config/ConfigurationService.h"
-#include "config/LocatorConfiguration.h"
 
 class Server : public KDSoapServer {
     Q_OBJECT
@@ -22,8 +20,6 @@ public:
         return new HelloWorldServerObject;
     }
 };
-
-// using namespace boost::program_options;
 
 int main(int argc, char **argv) {
     try {
@@ -44,8 +40,9 @@ int main(int argc, char **argv) {
                 ConfigurationService::init(vm["config"].as<std::string>().c_str());
 
                 QCoreApplication app(argc, argv);
+
                 /**
-                 * main programm
+                 * main programm begin
                  */
 
                 Server server;
@@ -58,6 +55,10 @@ int main(int argc, char **argv) {
                 } else {
                     std::cout << "Listening..." << std::endl;
                 }
+
+                /**
+                 * main programm end
+                 */
 
                 return app.exec();
             }
